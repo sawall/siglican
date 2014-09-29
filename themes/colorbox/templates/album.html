@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+      <link rel="stylesheet" href="{{ SIGAL_THEME_URL }}/css/style.min.css">    <!-- this needs to be in head -->
+      <div id="main" role="main" class="twelve columns offset-by-four">
+        <header>
+          {% if SIGAL_ALBUM.breadcrumb %}
+          <h2>
+            {% for url, title in SIGAL_ALBUM.breadcrumb %}
+            <a href="{{ url }}">{{ title }}</a>{% if not loop.last %} » {% endif %}
+            {% endfor -%}
+          </h2>
+          <hr>
+          {% endif %}
+        </header>
+
+        {% set numbers = ["zero", "one", "two", "three", "four", "five", "six",
+        "seven", "eight", "nine", "ten", "eleven", "twelve"] %}
+        {% set column_size = SIGAL_COLORBOX_COLUMN_SIZE %}
+        {% set nb_columns = (12 / column_size)|int %}
+        {% set column_size_t = numbers[column_size] %}
+
+        {% if SIGAL_ALBUM.albums %}
+        {% for alb in SIGAL_ALBUM.albums %}
+          {% if loop.index % nb_columns == 1 %}
+          <div id="albums" class="row">
+          {% endif%}
+            <div class="{{ column_size_t }} columns thumbnail
+                        {% if loop.index % nb_columns == 1 %}alpha{% endif%}
+                        {% if loop.index % nb_columns == 0 %}omega{% endif%}">
+              <a href="{{ alb.url }}">
+                <img src="{{ alb.thumbnail }}" class="album_thumb"
+                    alt="{{ alb.name }}" title="{{ alb.name }}" /></a>
+              <span class="album_title">{{ alb.title }}</span>
+            </div>
+          {% if loop.last or loop.index % nb_columns == 0 %}
+          </div>
+          {% endif%}
+        {% endfor %}
+        {% endif %}
+
+        {% if SIGAL_ALBUM.medias %}
+          {% macro img_description(media) -%}
+            {% if media.big %} data-big="{{ media.big }}"{% endif %}
+            {% if media.exif %}
+              {% if media.exif.datetime %}
+                data-date=", {{ media.exif.datetime }}"
+              {% endif %}
+            {% endif %}
+          {%- endmacro %}
+        <div id="gallery" class="row">
+          {% for media in SIGAL_ALBUM.medias %}
+            {% if media.type == "image" %}
+            <div class="{{ column_size_t }} columns thumbnail
+                        {% if loop.index % nb_columns == 1 %}alpha{% endif%}
+                        {% if loop.index % nb_columns == 0 %}omega{% endif%}">
+              <a href="{{ media.filename }}" class="gallery" title="{{ media.filename }}" {{ img_description(media) }}>
+                <img src="{{ media.thumbnail }}" alt="{{ media.filename }}"
+                    title="{{ media.title if media.title else media.filename }}" /></a>
+            </div>
+            {% endif %}
+            {% if media.type == "video" %}
+              <div class="{{ column_size_t }} columns thumbnail
+                          {% if loop.index % nb_columns == 1 %}alpha{% endif%}
+                          {% if loop.index % nb_columns == 0 %}omega{% endif%}">
+                <a href="#{{ media.filename|replace('.', '')|replace(' ', '') }}"
+                  class="gallery" inline='yes' title="{{ media.filename }}"
+                  {% if media.big %} data-big="{{ media.big }}"{% endif %}>
+                  <img src="{{ media.thumbnail }}" alt="{{ media.filename }}"
+                      title="{{ media.title if media.title else media.filename }}" /></a>
+              </div>
+              <!-- This contains the hidden content for the video -->
+              <div style='display:none'>
+                <div id="{{ media.filename|replace('.', '')|replace(' ', '') }}">
+                  <video controls>
+                  <source src='{{ media.filename }}' type='video/webm' />
+                  </video>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if SIGAL_ALBUM.zip %}
+        <div id="additionnal-infos" class="row">
+          <p><a href="{{ album.zip }}"
+              title="Download a zip archive with all images">Download ZIP</a></p>
+        </div>
+        {% endif %}
+
+        {% if SIGAL_ALBUM.description %}
+        <div id="description" class="row">
+          {{ SIGAL_ALBUM.description }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if SIGAL_ALBUM.medias %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ SIGAL_THEME_URL }}/js/jquery-1.10.2.min.js"%3E%3C/script%3E'))</script>
+    <script src="{{ SIGAL_THEME_URL }}/js/jquery.colorbox.min.js"></script>
+
+    <script>
+      $(".gallery").colorbox({
+        rel:"gallery",
+        transition:"none",
+        maxWidth: "90%",
+        maxHeight: "90%",
+        scalePhotos: true,
+        current: "{current} / {total}",
+        title: function () {
+          title = this.title;
+          if(this.hasAttribute("data-big")) {
+            title += " (full size)".link(this.getAttribute("data-big"));
+          }
+          if(this.hasAttribute("data-date")) {
+            title += this.getAttribute("data-date");
+          }
+          return title;
+        },
+        inline: function() {
+          return this.hasAttribute("inline");
+        }
+      });
+    </script>
+    {% endif %}
+
+{% endblock %}
