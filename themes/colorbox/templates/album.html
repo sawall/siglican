@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 
+{#
+    A head block must be defined in the Pelican theme's base.html prior to
+    closing the HTML head tag so that the siglican stylesheets and javascript
+    can be added. simply adding:
+        {% block head %}{% endblock %} 
+    just before the head closer is sufficient.
+#}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ SIGAL_THEME_URL }}/css/style.min.css">
+{% endblock %}
+
 {% block content %}
-      <link rel="stylesheet" href="{{ SIGAL_THEME_URL }}/css/style.min.css">    <!-- this needs to be in head -->
       <div id="main" role="main" class="twelve columns offset-by-four">
         <header>
           {% if SIGAL_ALBUM.breadcrumb %}
