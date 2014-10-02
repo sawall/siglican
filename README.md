@@ -14,12 +14,8 @@ Colorbox/Galleria generator by Simon Conseil.
   templates are incomplete.
 
 ## To Do
-1. Determine the best approach for merging Pelican and Sigal web themes. This
-   will probably require putting Sigal theme information into the Pelican theme
-   in order to facilitate loading Javascript and CSS in the html headers.
-2. Revise Sigal colorbox and galleria themes for easy inclusion into Pelican
-   themes.
-3. Change settings names to something other than SIGAL_*
-4. Unit tests.
-5. Logging cleanup.
-6. General code and documentation cleanup.
+1. Update galleria theme to work.
+2. Change settings names to something other than SIGAL_*
+3. Unit tests.
+4. Logging cleanup.
+5. General code and documentation cleanup.
