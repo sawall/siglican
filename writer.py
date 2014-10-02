@@ -89,13 +89,13 @@ class Writer(object):
             sys.exit(1)
         
         # Copy the theme files in the output dir
-        self.theme_path = os.path.join(settings['OUTPUT_PATH'], self.output_dir, 'static')
+        self.theme_path = os.path.join(settings['OUTPUT_PATH'], self.output_dir,
+                                       'static')
         copy_tree(os.path.join(self.theme, 'static'), self.theme_path)
         
     def generate_context(self, album):
         """Generate the context dict for the given path."""
         
-        self.logger.debug('siglican generate_context: theme_path ' + self.theme_path + " dst_path " + album.dst_path)
         albumdict = {
                         'SIGAL_ALBUM': album,
                         'SIGAL_INDEX_TITLE': self.index_title,
@@ -107,9 +107,6 @@ class Writer(object):
                     }
         albumdict.update(self.settings) 
         return albumdict
-#            'theme': {'name': os.path.basename(self.theme),
-#                      'url': url_from_path(os.path.relpath(self.theme_path,
-#                                                           album.dst_path))},
     
     def write(self, album):
         """Generate the HTML page and save it."""
