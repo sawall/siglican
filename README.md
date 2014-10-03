@@ -5,29 +5,39 @@ A static gallery generator plugin for Pelican, based on the Sigal
 Colorbox/Galleria static site generator.
 
 ##How To
-1. Put this folder into your Pelican plugins directory. Add 'siglican' to
-   PLUGINS in pelicanconf.py.
-2. Create a 'siglican' directory in your base directory, at the same level as
-   'content'. Drag 'colorbox' or 'galleria' from the 'themes' directory into
-   this folder. Also create an 'images' subdirectory under 'siglican'.
-3. Create album and image metadata, as desired.
-4. Create theme directory inside of 'siglican'. Use the colorbox or galleria
-   theme as a starting point. Make sure that your Pelican theme's base.html
-   template has a 'head' block defined before </head>.
+1. Add this package to your Pelican plugins directory.
+2. Add 'siglican' to PLUGINS in pelicanconf.py. Add SIGLICAN_ settings to
+   pelicanconf.py as desired.
+3. Create a *siglican* directory in your base directory, at the same level as
+   *content*.
+4. Drag gallery.md from examples to your pelican *pages* directory and edit it.
+   This gives Pelican a hook into your root gallery.
+5. Drag siglican_gallery.html into your Pelican theme's *templates* directory.
+   This is the template for your root gallery.
+6. Copy one of the example themes to *siglican*. This dictates how album pages
+   look. Modify to your heart's content.
+7. Make sure your Pelican theme's base.html template has a 'head' block
+   (e.g., **{% block head %}{% endblock %}**) defined before **</head>**. That
+   will give your siglican theme a way to inject gallery-specific css and js
+   into your gallery pages. 
+8. Create an 'images' folder under 'siglican'. Add album folders along with
+   images and metadata.
 
-###Example directory tree:
+###Example directory excerpt:
 ```
    /site
-     /content/*
-     /plugins/siglican/*.py
-     /siglican
-       /images
-         /album1
-         /album2
-         /...
-       /[colorbox|galleria]
-         /static/*
-         /templates/album.html
+      /content/
+         /pages/gallery.md
+      /plugins/siglican/*.py
+      /siglican
+         /images
+            /album1
+            /album2
+            /...
+         /[colorbox|galleria]
+            /static/*
+            /templates/album.html
+      /themes/theme/templates/siglican_gallery.html
 ```
 
 ###Pelican Configuration Settings

@@ -22,7 +22,7 @@
 
 __title__ = 'siglican'
 __author__ = 'Scott Boone'
-__version__ = '0.0.1-alpha'
+__version__ = '0.0.2-beta'
 __license__ = 'MIT'
 __url__ = 'https://github.com/sawall/siglican'
 __all__ = ['__title__', '__author__', '__version__', '__license__', '__url__']

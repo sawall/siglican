@@ -37,8 +37,6 @@ from collections import defaultdict
 from .compat import strxfrm, UnicodeMixin, url_quote
 from .utils import read_markdown, url_from_path
 
-# TODO ** move logger out to here
-
 class Media(UnicodeMixin):
     """Base Class for media files.
 

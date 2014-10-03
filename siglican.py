@@ -184,8 +184,8 @@ class SigalGalleryGenerator(Generator):
         logger.debug('siglican: albums:\n%r', self.albums.values())
         
         # update the jinja context so that templates can access it:
-        self._update_context(('albums', )) # ** not 100% certain this is needed
-        self.context['ALBUMS'] = self.albums
+        #self._update_context(('albums', ))   # unnecessary? **
+        self.context['ALBUMS'] = self.albums  # ** change to SIGLICAN_ALBUMS?
         
         # update the jinja context with the default sigal settings:
         for k,v in _DEFAULT_SIGLICAN_SETTINGS.iteritems():
@@ -196,8 +196,11 @@ class SigalGalleryGenerator(Generator):
         """ Creates gallery destination directories, thumbnails, resized
             images, and moves everything into the destination."""
         
-        # note: ignore the writer because it might be from another plugin
-        # see https://github.com/getpelican/pelican/issues/1459
+        # note: ignore the writer sent by Pelican because it's not certain
+        # which Writer it will send. if another active plugin also implements
+        # Writer, Pelican may send that instead of one of its core Writers.
+        # I logged a feature request here:
+        # https://github.com/getpelican/pelican/issues/1459
         
         # create destination directory
         if not os.path.isdir(self.settings['SIGLICAN_DESTINATION']):
@@ -245,22 +248,13 @@ class SigalGalleryGenerator(Generator):
         
             logger.info("siglican theme: %s", self.theme)
             
-            # note 2: when Pelican calls generate_output() on a Generator plugin,
-            # it's uncertain which Writer will be sent; if other plugins with
-            # Writers are loaded, it might be one of those Writers instead of 
-            # one of the core Pelican writers. thus this plugin explicitly calls
-            # a Writer so that it doesn't get any nasty surprises due to plugin
-            # conflicts. I logged a feature request to Pelican here:
-            # https://github.com/getpelican/pelican/issues/1459
-            
             self.writer = Writer(self.context, self.theme, 'album')
             for album in self.albums.values():
                 self.writer.write(album)
             
             ## possible cleanup:
-            ##   - missing some writer options that Sigal had, bring back?
-            ##   - make sure all necessary template info is accessible by the writer
-            ##   - make sure thumbnails don't break in some cases
+            ##   - bring back Writer options that Sigal had?
+            ##   - make sure thumbnails don't break in some cases [fixed?]
 
 def get_generators(generators):
     return SigalGalleryGenerator
