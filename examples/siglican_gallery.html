@@ -1,0 +1,11 @@
+<!-- This goes in your Pelican theme directory. -->
+
+{% extends "base.html" %}
+{% block content %}
+<h2>albums</h2>
+<ul>
+{% for aname,album in ALBUMS.iteritems() %}
+<li>{{ aname }}<a href="{{ SITEURL }}/{{ SIGLICAN_DESTINATION }}/{{ album.url }}"><img src="{{ SITEURL }}/{{ SIGLICAN_DESTINATION }}/{{ album.thumbnail }}"></a>
+{% endfor %}
+</ul>
+{% endblock %}
