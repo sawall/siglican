@@ -71,8 +71,14 @@ pelicanconf.py:
 1. Unit tests.
 2. Update colorbox/galleria example themes to deal better with nested albums.
 3. Streamline/refactor/merge modules.
-   
+
+## Notes
+For more on creating Pelican generator plugins, see the [Pelican plugin documentation]
+(http://docs.getpelican.com/en/latest/plugins.html#how-to-create-plugins) and
+[Pelican internals](http://docs.getpelican.com/en/latest/internals.html).
+
 ##Credits
-* Around 2/3 of the core Python code is ported from [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
+* Around 2/3 of the core Python code is ported from
+  [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
 * Heavily leverages Pelican, Jinja2, Colorbox, and Galleria.
 * Pelican generator plugin implementation and integration by Scott Boone (sawall@github).
