@@ -59,6 +59,12 @@ class Writer(object):
                 env_options['lstrip_blocks'] = True
         except ValueError:
             pass
+
+        # note: it's impossible to add templates to an existing jinja env,
+        # which is why we create a custom environment here that includes
+        # templates from both the Pelican theme and the siglican theme.
+        # it's also ok for the "album.html" template to live in the Pelican
+        # theme.
         
         # instantiate environment with pelican and siglican templates
         theme_paths = [ os.path.join(self.theme, 'templates'),

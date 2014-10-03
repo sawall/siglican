@@ -76,7 +76,7 @@ _DEFAULT_SIGLICAN_SETTINGS = {
 }
 
 # Generator class used to generate plugin context and write.
-# TODO: consider usinge CachingGenerator instead?
+# TODO github5: consider usinge CachingGenerator instead?
 class SigalGalleryGenerator(Generator):
     # reference: methods provided by Pelican Generator:
     # def _update_context(self, items):  adds more items to the context dict
@@ -141,7 +141,7 @@ class SigalGalleryGenerator(Generator):
     def generate_context(self):
         """"Update the global Pelican context that's shared between generators."""
 
-        logger.debug("siglican: in generate_context()")
+        logger.info("siglican generating context")
         locale.setlocale(locale.LC_ALL, self.settings['SIGLICAN_LOCALE'])
         self.stats = {'image': 0, 'image_skipped': 0,
                       'video': 0, 'video_skipped': 0}
@@ -157,11 +157,11 @@ class SigalGalleryGenerator(Generator):
                                    for ignore in ignore_dirs):
                 logger.info('siglican: ignoring %s', relpath)
                 continue
-            if ignore_files: # << ** BUG: if no ignore_files, then no files?
+            if ignore_files: # ** github6: if no ignore_files, then no files?
                 files_path = {os.path.join(relpath, f) for f in files}
                 for ignore in ignore_files:
                     files_path -= set(fnmatch.filter(files_path, ignore))
-                    ## ** BUG? unicode in list may cause mismatch
+                    ## ** TEST? unicode in list may cause mismatch
                 logger.debug('siglican: Files before filtering: %r', files)
                 files = [os.path.split(f)[1] for f in files_path]
                 logger.debug('siglican: Files after filtering: %r', files)
@@ -182,8 +182,6 @@ class SigalGalleryGenerator(Generator):
                 self.albums[relpath] = album
         # done generating context (self.albums) now
         logger.debug('siglican: albums:\n%r', self.albums.values())
-        # BUG ** : albums appears to contain one extra empty entry at this point
-        #          <Album>(path='.', title=u'images', assets:[])]
         
         # update the jinja context so that templates can access it:
         self._update_context(('albums', )) # ** not 100% certain this is needed
@@ -198,21 +196,15 @@ class SigalGalleryGenerator(Generator):
         """ Creates gallery destination directories, thumbnails, resized
             images, and moves everything into the destination."""
         
-        # ignore the writer because it might be from another plugin
+        # note: ignore the writer because it might be from another plugin
         # see https://github.com/getpelican/pelican/issues/1459
-        
-        # DELETE ** I don't think I need to do anything like this:
-        # create a gallery in pages so that we can reference it from pelican
-        #for page in self.pages:
-        #    if page.metadata.get('template') == 'sigal_gallery':
-        #        page.gallery=gallery
         
         # create destination directory
         if not os.path.isdir(self.settings['SIGLICAN_DESTINATION']):
             os.makedirs(self.settings['SIGLICAN_DESTINATION'])
         
-        # TODO ** add lots of error/exception catching
-        # TODO ** re-integrate multiprocessing logic from Sigal
+        # github7 ** improve exception catching 
+        # github8 ** re-integrate multiprocessing logic from Sigal
         
         # generate thumbnails, process images, and move them to the destination
         albums = self.albums
@@ -252,11 +244,6 @@ class SigalGalleryGenerator(Generator):
                                      os.path.basename(self.theme))
         
             logger.info("siglican theme: %s", self.theme)
-            
-            ## note 1: it's impossible to add additional templates to jinja
-            ## after the initial init, which means we either need to put plugin
-            ## templates in with the rest of the pelican templates or use a
-            ## plugin-specific jinja environment and writer
             
             # note 2: when Pelican calls generate_output() on a Generator plugin,
             # it's uncertain which Writer will be sent; if other plugins with
