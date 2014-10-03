@@ -34,12 +34,12 @@ Example directory tree:
 
 ## To Do
 1. Update galleria theme to work.
-2. Change settings names to something other than SIGLICAN_*
-3. Unit tests.
-4. Logging cleanup.
-5. Update colorbox/galleria example themes to deal better with nested albums.
-6. General code and documentation cleanup.
+2. Unit tests.
+3. Logging cleanup.
+4. Update colorbox/galleria example themes to deal better with nested albums.
+5. General code and documentation cleanup.
    
 ##Credits
-* The bulk of the code is ported from [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
+* Around 2/3 of the core Python code is ported from [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
+* Heavily leverages Pelican, Jinja2, Colorbox, and Galleria.
 * Pelican integration by Scott Boone (sawall@github).
