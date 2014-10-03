@@ -43,7 +43,7 @@ from .utils import url_from_path
 class Writer(object):
     """Generate html pages for each directory of images."""
     
-    def __init__(self, settings, theme=None, index_title=''):
+    def __init__(self, settings, theme, index_title=''):
         self.settings = settings
         self.output_dir = settings['SIGAL_DESTINATION']
         self.index_title = index_title
@@ -51,21 +51,11 @@ class Writer(object):
         
         # check for a custom theme in ./sigal/themes, if not found, look for a
         # default in the sigal_theme/themes plugin directory
-        self.theme = settings['SIGAL_THEME']
-        default_themes = os.path.normpath(os.path.join(
-                         os.path.abspath(os.path.dirname(__file__)), 'themes'))
-        self.logger.debug("siglican: custom theme: %s", self.theme)
-        self.logger.debug("siglican: default themedir: %s", default_themes)
-        if not os.path.exists(self.theme):
-            self.theme = os.path.join(default_themes, os.path.basename(self.theme))
-            if not os.path.exists(self.theme):
-                raise Exception("siglican: unable to find theme: %s" %
-                                 os.path.basename(self.theme))
         
-        self.logger.info("siglican theme: %s", self.theme)
+        self.logger.info("siglican theme: %s", theme)
         
         # pelican theme path merged with siglican theme path 
-        theme_paths = [ os.path.join(self.theme, 'templates'),
+        theme_paths = [ os.path.join(theme, 'templates'),
                         os.path.join(self.settings['THEME'], 'templates') ]
         
         # setup jinja env

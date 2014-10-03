@@ -61,7 +61,7 @@ _DEFAULT_SIGAL_SETTINGS = {
     'SIGAL_ORIG_LINK': False,
 #    'PLUGINS': [],
 #    'PLUGIN_PATHS': [],
-    'SIGAL_SOURCE': 'sigal',
+    'SIGAL_SOURCE': 'siglican',
     'SIGAL_THEME': 'colorbox',
     'SIGAL_THUMB_DIR': 'thumbs',
     'SIGAL_THUMB_FIT': True,
@@ -244,8 +244,8 @@ class SigalGalleryGenerator(Generator):
             self.theme = self.settings['SIGAL_THEME']
             default_themes = os.path.normpath(os.path.join(
                              os.path.abspath(os.path.dirname(__file__)), 'themes'))
-            logger.debug("siglican: custom theme: %s", self.theme)
-            logger.debug("siglican: default themedir: %s", default_themes)
+            #logger.debug("siglican: custom theme: %s", self.theme)
+            #logger.debug("siglican: default themedir: %s", default_themes)
             if not os.path.exists(self.theme):
                 self.theme = os.path.join(default_themes, os.path.basename(self.theme))
                 if not os.path.exists(self.theme):
@@ -253,7 +253,6 @@ class SigalGalleryGenerator(Generator):
                                      os.path.basename(self.theme))
         
             logger.info("siglican theme: %s", self.theme)
-            theme_relpath = os.path.join(self.theme, 'templates')
             
             ## note 1: it's impossible to add additional templates to jinja
             ## after the initial init, which means we either need to put plugin
