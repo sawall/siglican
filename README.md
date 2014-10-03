@@ -15,7 +15,7 @@ Colorbox/Galleria static site generator.
    theme as a starting point. Make sure that your Pelican theme's base.html
    template has a 'head' block defined before </head>.
 
-Example directory tree:
+###Example directory tree:
 ```
    /site
      /content/*
@@ -30,7 +30,7 @@ Example directory tree:
          /templates/album.html
 ```
 
-##Pelican Configuration Settings
+###Pelican Configuration Settings
 
 These are the default values of the settings that can be configured in 
 pelicanconf.py:
@@ -67,12 +67,9 @@ pelicanconf.py:
 * SIGLICAN_ZIP_GALLERY: False
 * SIGLICAN_ZIP_MEDIA_FORMAT: 'resized'
 
-## To Do
-1. Update galleria theme to work.
-2. Unit tests.
-3. Logging cleanup.
-4. Update colorbox/galleria example themes to deal better with nested albums.
-5. General code and documentation cleanup.
+## Future
+1. Unit tests.
+2. Update colorbox/galleria example themes to deal better with nested albums.
    
 ##Credits
 * Around 2/3 of the core Python code is ported from [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
