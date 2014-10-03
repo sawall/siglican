@@ -17,9 +17,9 @@ Colorbox/Galleria static site generator.
 6. Copy one of the example themes to *siglican*. This dictates how album pages
    look. Modify to your heart's content.
 7. Make sure your Pelican theme's base.html template has a 'head' block
-   (e.g., **{% block head %}{% endblock %}**) defined before **</head>**. That
-   will give your siglican theme a way to inject gallery-specific css and js
-   into your gallery pages. 
+   (e.g., **{% block head %}{% endblock %}**) defined before **&lt;/head&gt;**.
+   That will give your siglican theme a way to inject gallery-specific css and
+   javascript into your gallery pages. 
 8. Create an 'images' folder under 'siglican'. Add album folders along with
    images and metadata.
 
