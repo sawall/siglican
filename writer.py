@@ -45,6 +45,7 @@ class Writer(object):
     
     def __init__(self, settings, theme, index_title=''):
         self.settings = settings
+        self.theme = theme
         self.output_dir = settings['SIGAL_DESTINATION']
         self.index_title = index_title
         self.logger = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ class Writer(object):
         self.logger.info("siglican theme: %s", theme)
         
         # pelican theme path merged with siglican theme path 
-        theme_paths = [ os.path.join(theme, 'templates'),
+        theme_paths = [ os.path.join(self.theme, 'templates'),
                         os.path.join(self.settings['THEME'], 'templates') ]
         
         # setup jinja env
