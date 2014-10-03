@@ -47,7 +47,7 @@ class Writer(object):
         self.settings = settings
         self.theme = theme
         self.index_title = index_title
-        self.output_dir = settings['SIGAL_DESTINATION']
+        self.output_dir = settings['SIGLICAN_DESTINATION']
         self.logger = logging.getLogger(__name__)
         
         self.logger.debug("siglican theme: %s", theme)
@@ -81,11 +81,11 @@ class Writer(object):
         """Generate the context dict for the given path."""
         
         albumdict = {
-                        'SIGAL_ALBUM': album,
-                        'SIGAL_INDEX_TITLE': self.index_title,
-                        'SIGAL_LINK': sigal_link,
-                        'SIGAL_THEME_NAME': os.path.basename(self.theme),
-                        'SIGAL_THEME_URL': url_from_path(
+                        'SIGLICAN_ALBUM': album,
+                        'SIGLICAN_INDEX_TITLE': self.index_title,
+                        'SIGLICAN_LINK': sigal_link,
+                        'SIGLICAN_THEME_NAME': os.path.basename(self.theme),
+                        'SIGLICAN_THEME_URL': url_from_path(
                                            os.path.relpath(self.theme_path,
                                                            album.dst_path))
                     }

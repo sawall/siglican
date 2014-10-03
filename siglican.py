@@ -37,43 +37,41 @@ logger = logging.getLogger(__name__)
 
 # Default config from Sigal's settings module. These have been changed to 
 # upper case because Pelican does not recognize lower case configuration names.
-_DEFAULT_SIGAL_SETTINGS = {
-    'SIGAL_ALBUMS_SORT_REVERSE': False,
-    'SIGAL_AUTOROTATE_IMAGES': True,
-    'SIGAL_COLORBOX_COLUMN_SIZE': 4,
-    'SIGAL_COPY_EXIF_DATA': False,
-    'SIGAL_DESTINATION': 'gallery',
-    'SIGAL_FILES_TO_COPY': (),
-#    'GOOGLE_ANALYTICS': '',
-    'SIGAL_IGNORE_DIRECTORIES': ['.'], # using a pelican theme template as base
-    'SIGAL_IGNORE_FILES': [],
-    'SIGAL_IMG_PROCESSOR': 'ResizeToFit',
-    'SIGAL_IMG_SIZE': (640, 480),
-    'SIGAL_INDEX_IN_URL': False,
-    'SIGAL_JPG_OPTIONS': {'quality': 85, 'optimize': True, 'progressive': True},
-#    'SIGAL_KEEP_ORIG': False,
-    'SIGAL_LINKS': '',
-    'SIGAL_LOCALE': '',
-    'SIGAL_MEDIAS_SORT_ATTR': 'filename',
-    'SIGAL_MEDIAS_SORT_REVERSE': False,
-    'SIGAL_MAKE_THUMBS': True,
-    'SIGAL_ORIG_DIR': 'original',
-    'SIGAL_ORIG_LINK': False,
+_DEFAULT_SIGLICAN_SETTINGS = {
+    'SIGLICAN_ALBUMS_SORT_REVERSE': False,
+    'SIGLICAN_AUTOROTATE_IMAGES': True,
+    'SIGLICAN_COLORBOX_COLUMN_SIZE': 4,
+    'SIGLICAN_COPY_EXIF_DATA': False,
+    'SIGLICAN_DESTINATION': 'gallery',
+    'SIGLICAN_FILES_TO_COPY': (),
+    'SIGLICAN_IGNORE_DIRECTORIES': ['.'],
+    'SIGLICAN_IGNORE_FILES': [],
+    'SIGLICAN_IMG_PROCESSOR': 'ResizeToFit',
+    'SIGLICAN_IMG_SIZE': (640, 480),
+    'SIGLICAN_INDEX_IN_URL': False,
+    'SIGLICAN_JPG_OPTIONS': {'quality': 85, 'optimize': True, 'progressive': True},
+    'SIGLICAN_LINKS': '',
+    'SIGLICAN_LOCALE': '',
+    'SIGLICAN_MEDIAS_SORT_ATTR': 'filename',
+    'SIGLICAN_MEDIAS_SORT_REVERSE': False,
+    'SIGLICAN_MAKE_THUMBS': True,
+    'SIGLICAN_ORIG_DIR': 'original',
+    'SIGLICAN_ORIG_LINK': False,
 #    'PLUGINS': [],
 #    'PLUGIN_PATHS': [],
-    'SIGAL_SOURCE': 'siglican',
-    'SIGAL_THEME': 'colorbox',
-    'SIGAL_THUMB_DIR': 'thumbs',
-    'SIGAL_THUMB_FIT': True,
-    'SIGAL_THUMB_PREFIX': '',
-    'SIGAL_THUMB_SIZE': (200, 150),
-    'SIGAL_THUMB_SUFFIX': '',
-    'SIGAL_VIDEO_SIZE': (480, 360),
-    'SIGAL_WEBM_OPTIONS': ['-crf', '10', '-b:v', '1.6M',
-                     '-qmin', '4', '-qmax', '63'],
-    'SIGAL_WRITE_HTML': True,
-    'SIGAL_ZIP_GALLERY': False,
-    'SIGAL_ZIP_MEDIA_FORMAT': 'resized',
+    'SIGLICAN_SOURCE': 'siglican',
+    'SIGLICAN_THEME': 'colorbox',
+    'SIGLICAN_THUMB_DIR': 'thumbs',
+    'SIGLICAN_THUMB_FIT': True,
+    'SIGLICAN_THUMB_PREFIX': '',
+    'SIGLICAN_THUMB_SIZE': (200, 150),
+    'SIGLICAN_THUMB_SUFFIX': '',
+    'SIGLICAN_VIDEO_SIZE': (480, 360),
+    'SIGLICAN_WEBM_OPTIONS': ['-crf', '10', '-b:v', '1.6M',
+                              '-qmin', '4', '-qmax', '63'],
+    'SIGLICAN_WRITE_HTML': True,
+    'SIGLICAN_ZIP_GALLERY': False,
+    'SIGLICAN_ZIP_MEDIA_FORMAT': 'resized',
 }
 
 # Generator class used to generate plugin context and write.
@@ -93,8 +91,8 @@ class SigalGalleryGenerator(Generator):
         # this needs to be first to establish pelican settings:
         super(SigalGalleryGenerator, self).__init__(*args, **kwargs)
         # add default sigal settings to generator settings:
-        for k in _DEFAULT_SIGAL_SETTINGS.keys()[:]:
-            self.settings[k] = self.settings.get(k, _DEFAULT_SIGAL_SETTINGS[k])
+        for k in _DEFAULT_SIGLICAN_SETTINGS.keys()[:]:
+            self.settings[k] = self.settings.get(k, _DEFAULT_SIGLICAN_SETTINGS[k])
             logger.debug("sigal.pelican: setting %s: %s",k,self.settings[k])
         self._clean_settings()
         # this is where we could create a signal if we wanted to, e.g.:
@@ -104,38 +102,38 @@ class SigalGalleryGenerator(Generator):
         """Checks existence of directories and normalizes image size settings."""
         
         # create absolute paths to source, theme and destination directories:
-        init_source = self.settings['SIGAL_SOURCE']
-        self.settings['SIGAL_SOURCE'] = os.path.normpath(self.settings['PATH'] + 
-            "/../" + self.settings['SIGAL_SOURCE'] + '/images')
-        self.settings['SIGAL_THEME'] = os.path.normpath(self.settings['PATH'] +
-            "/../" + init_source + "/" + self.settings['SIGAL_THEME'])
-        self.settings['SIGAL_DESTINATION'] = os.path.normpath(
-            self.settings['OUTPUT_PATH'] + "/" + self.settings['SIGAL_DESTINATION'])
+        init_source = self.settings['SIGLICAN_SOURCE']
+        self.settings['SIGLICAN_SOURCE'] = os.path.normpath(self.settings['PATH'] + 
+            "/../" + self.settings['SIGLICAN_SOURCE'] + '/images')
+        self.settings['SIGLICAN_THEME'] = os.path.normpath(self.settings['PATH'] +
+            "/../" + init_source + "/" + self.settings['SIGLICAN_THEME'])
+        self.settings['SIGLICAN_DESTINATION'] = os.path.normpath(
+            self.settings['OUTPUT_PATH'] + "/" + self.settings['SIGLICAN_DESTINATION'])
         
         enc = locale.getpreferredencoding() if PY2 else None
         
         # test for existence of source directories
-        pathkeys = ['SIGAL_SOURCE', 'SIGAL_THEME']
+        pathkeys = ['SIGLICAN_SOURCE', 'SIGLICAN_THEME']
         for k in pathkeys:
             if os.path.isdir(self.settings[k]):
                 # convert to unicode for os.walk dirname/filename
                 if PY2 and isinstance(self.settings[k], str):
                     self.settings[k] = self.settings[k].decode(enc)
-                logger.debug("siglican: %s = %s",k,self.settings[k])
+                logger.info("%s = %s",k,self.settings[k])
             else:
                 logger.error("siglican: missing source directory %s: %s",
                              k,self.settings[k])
                 sys.exit(1)
         
         # normalize sizes as e landscape
-        for key in ('SIGAL_IMG_SIZE', 'SIGAL_THUMB_SIZE', 'SIGAL_VIDEO_SIZE'):
+        for key in ('SIGLICAN_IMG_SIZE', 'SIGLICAN_THUMB_SIZE', 'SIGLICAN_VIDEO_SIZE'):
             w, h = self.settings[key]
             if h > w:
                 self.settings[key] = (h, w)
                 logger.warning("siglican: The %s setting should be specified "
                                "with the largest value first.", key)
         
-        if not self.settings['SIGAL_IMG_PROCESSOR']:
+        if not self.settings['SIGLICAN_IMG_PROCESSOR']:
             logger.info('No Processor, images will not be resized')
     
     # based on Sigal's Gallery.__init__() method:    
@@ -143,14 +141,14 @@ class SigalGalleryGenerator(Generator):
         """"Update the global Pelican context that's shared between generators."""
 
         logger.debug("siglican: in generate_context()")
-        locale.setlocale(locale.LC_ALL, self.settings['SIGAL_LOCALE'])
+        locale.setlocale(locale.LC_ALL, self.settings['SIGLICAN_LOCALE'])
         self.stats = {'image': 0, 'image_skipped': 0,
                       'video': 0, 'video_skipped': 0}
         # build the list of directories with images
         # ** TODO: add error checking, consider use of get(), etc.
-        src_path = self.settings['SIGAL_SOURCE']
-        ignore_dirs = self.settings['SIGAL_IGNORE_DIRECTORIES']
-        ignore_files = self.settings['SIGAL_IGNORE_FILES']
+        src_path = self.settings['SIGLICAN_SOURCE']
+        ignore_dirs = self.settings['SIGLICAN_IGNORE_DIRECTORIES']
+        ignore_files = self.settings['SIGLICAN_IGNORE_FILES']
         for path, dirs, files in os.walk(src_path, followlinks=True,
                                          topdown=False):
             relpath = os.path.relpath(path, src_path)
@@ -191,7 +189,7 @@ class SigalGalleryGenerator(Generator):
         self.context['ALBUMS'] = self.albums
         
         # update the jinja context with the default sigal settings:
-        for k,v in _DEFAULT_SIGAL_SETTINGS.iteritems():
+        for k,v in _DEFAULT_SIGLICAN_SETTINGS.iteritems():
             if not k in self.context:
                 self.context[k] = v
         
@@ -209,8 +207,8 @@ class SigalGalleryGenerator(Generator):
         #        page.gallery=gallery
         
         # create destination directory
-        if not os.path.isdir(self.settings['SIGAL_DESTINATION']):
-            os.makedirs(self.settings['SIGAL_DESTINATION'])
+        if not os.path.isdir(self.settings['SIGLICAN_DESTINATION']):
+            os.makedirs(self.settings['SIGLICAN_DESTINATION'])
         
         # TODO ** add lots of error/exception catching
         # TODO ** re-integrate multiprocessing logic from Sigal
@@ -238,10 +236,10 @@ class SigalGalleryGenerator(Generator):
                                       media.dst_path),self.settings)
         
         # generate the index.html files for the albums
-        if self.settings['SIGAL_WRITE_HTML']:  # defaults to True
+        if self.settings['SIGLICAN_WRITE_HTML']:  # defaults to True
             # locate the theme; check for a custom theme in ./sigal/themes, if not
             # found, look for a default in siglican/themes
-            self.theme = self.settings['SIGAL_THEME']
+            self.theme = self.settings['SIGLICAN_THEME']
             default_themes = os.path.normpath(os.path.join(
                              os.path.abspath(os.path.dirname(__file__)), 'themes'))
             #logger.debug("siglican: custom theme: %s", self.theme)

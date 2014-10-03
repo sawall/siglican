@@ -5,8 +5,8 @@ A static gallery generator plugin for Pelican, based on the Sigal
 Colorbox/Galleria static site generator.
 
 ##How To
-1. Put the contents of this folder into your Pelican plugins directory. Add
-   'siglican' to PLUGINS in pelicanconf.py.
+1. Put this folder into your Pelican plugins directory. Add 'siglican' to
+   PLUGINS in pelicanconf.py.
 2. Create a 'siglican' directory in your base directory, at the same level as
    'content'. Drag 'colorbox' or 'galleria' from the 'themes' directory into
    this folder. Also create an 'images' subdirectory under 'siglican'.
@@ -30,9 +30,11 @@ Example directory tree:
          /templates/album.html
 ```
 
+##Pelican settings
+
 ## To Do
 1. Update galleria theme to work.
-2. Change settings names to something other than SIGAL_*
+2. Change settings names to something other than SIGLICAN_*
 3. Unit tests.
 4. Logging cleanup.
 5. Update colorbox/galleria example themes to deal better with nested albums.

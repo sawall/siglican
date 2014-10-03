@@ -62,11 +62,11 @@ class Media(UnicodeMixin):
         self.path = path
         self.settings = settings
         
-        self.src_path = os.path.join(settings['SIGAL_SOURCE'], path, filename)
-        self.dst_path = os.path.join(settings['SIGAL_DESTINATION'], path, filename)
+        self.src_path = os.path.join(settings['SIGLICAN_SOURCE'], path, filename)
+        self.dst_path = os.path.join(settings['SIGLICAN_DESTINATION'], path, filename)
         
         self.thumb_name = get_thumb(self.settings, self.filename)
-        self.thumb_path = os.path.join(settings['SIGAL_DESTINATION'], path, self.thumb_name)
+        self.thumb_path = os.path.join(settings['SIGLICAN_DESTINATION'], path, self.thumb_name)
         
         self.logger = logging.getLogger(__name__)
         self.raw_exif = None
@@ -95,8 +95,8 @@ class Media(UnicodeMixin):
             self.logger.debug('siglican: Generating thumbnail for %r', self)
             try:
                 generator(self.src_path, self.thumb_path,
-                          self.settings['SIGAL_THUMB_SIZE'],
-                          fit=self.settings['SIGAL_THUMB_FIT'])
+                          self.settings['SIGLICAN_THUMB_SIZE'],
+                          fit=self.settings['SIGLICAN_THUMB_FIT'])
             except Exception as e:
                 self.logger.error('siglican: Failed to generate thumbnail: %s', e)
                 return
@@ -139,7 +139,7 @@ class Video(Media):
         base = os.path.splitext(filename)[0]
         self.src_filename = filename
         self.filename = self.url = base + '.webm'
-        self.dst_path = os.path.join(settings['SIGAL_DESTINATION'], path, base + '.webm')
+        self.dst_path = os.path.join(settings['SIGLICAN_DESTINATION'], path, base + '.webm')
 
 
 # minimally modified from Sigal's gallery.Album class
@@ -157,25 +157,25 @@ class Album(object):
 
         # set up source and destination paths
         if path == '.':
-            self.src_path = settings['SIGAL_SOURCE']
-            self.dst_path = settings['SIGAL_DESTINATION']
+            self.src_path = settings['SIGLICAN_SOURCE']
+            self.dst_path = settings['SIGLICAN_DESTINATION']
         else:
-            self.src_path = os.path.join(settings['SIGAL_SOURCE'], path)
-            self.dst_path = os.path.join(settings['SIGAL_DESTINATION'], path)
+            self.src_path = os.path.join(settings['SIGLICAN_SOURCE'], path)
+            self.dst_path = os.path.join(settings['SIGLICAN_DESTINATION'], path)
 
         self.logger = logging.getLogger(__name__)
         self._get_metadata()  # this reads the index.md file
 
         # optionally add index.html to the URLs
         # ** don't understand purpose of this; default is False
-        self.url_ext = self.output_file if settings['SIGAL_INDEX_IN_URL'] else ''
+        self.url_ext = self.output_file if settings['SIGLICAN_INDEX_IN_URL'] else ''
         
         # creates appropriate subdirectory for the album
         self.index_url = url_from_path(os.path.relpath(
-            settings['SIGAL_DESTINATION'], self.dst_path)) + '/' + self.url_ext
+            settings['SIGLICAN_DESTINATION'], self.dst_path)) + '/' + self.url_ext
 
         # sort sub-albums
-        dirnames.sort(key=strxfrm, reverse=settings['SIGAL_ALBUMS_SORT_REVERSE'])
+        dirnames.sort(key=strxfrm, reverse=settings['SIGLICAN_ALBUMS_SORT_REVERSE'])
         self.subdirs = dirnames
 
         #: List of all medias in the album (:class:`~sigal.gallery.Image` and
@@ -198,13 +198,13 @@ class Album(object):
 
         # sort images
         if medias:
-            medias_sort_attr = settings['SIGAL_MEDIAS_SORT_ATTR']
+            medias_sort_attr = settings['SIGLICAN_MEDIAS_SORT_ATTR']
             if medias_sort_attr == 'date':
                 key = lambda s: s.date or datetime.now()
             else:
                 key = lambda s: strxfrm(getattr(s, medias_sort_attr))
 
-            medias.sort(key=key, reverse=settings['SIGAL_MEDIAS_SORT_REVERSE'])
+            medias.sort(key=key, reverse=settings['SIGLICAN_MEDIAS_SORT_REVERSE'])
 
         #signals.album_initialized.send(self)
     
@@ -253,10 +253,10 @@ class Album(object):
 
         if self.medias:
             check_or_create_dir(os.path.join(self.dst_path,
-                                     self.settings['SIGAL_THUMB_DIR']))
+                                     self.settings['SIGLICAN_THUMB_DIR']))
 
-        #if self.medias and self.settings['SIGAL_KEEP_ORIG']:
-        #    self.orig_path = os.path.join(self.dst_path, self.settings['SIGAL_ORIG_DIR'])
+        #if self.medias and self.settings['SIGLICAN_KEEP_ORIG']:
+        #    self.orig_path = os.path.join(self.dst_path, self.settings['SIGLICAN_ORIG_DIR'])
         #    check_or_create_dir(self.orig_path)
 
     @property
@@ -368,13 +368,13 @@ class Album(object):
         archive with all original images of the corresponding directory.
 
         """
-        zip_gallery = self.settings['SIGAL_ZIP_GALLERY']
+        zip_gallery = self.settings['SIGLICAN_ZIP_GALLERY']
 
         if zip_gallery and len(self) > 0:
             archive_path = os.path.join(self.dst_path, zip_gallery)
             archive = zipfile.ZipFile(archive_path, 'w')
 
-            if self.settings['SIGAL_ZIP_MEDIA_FORMAT'] == 'orig':
+            if self.settings['SIGLICAN_ZIP_MEDIA_FORMAT'] == 'orig':
                 for p in self:
                     archive.write(p.src_path, os.path.split(p.src_path)[1])
             else:
@@ -408,8 +408,8 @@ def get_thumb(settings, filename):
 
     if ext.lower() in Video.extensions:
         ext = '.jpg'
-    return os.path.join(path, settings['SIGAL_THUMB_DIR'], settings['SIGAL_THUMB_PREFIX'] +
-                name + settings['SIGAL_THUMB_SUFFIX'] + ext)
+    return os.path.join(path, settings['SIGLICAN_THUMB_DIR'], settings['SIGLICAN_THUMB_PREFIX'] +
+                name + settings['SIGLICAN_THUMB_SUFFIX'] + ext)
 
 def get_exif_tags(source):
     """Read EXIF tags from file @source and return a tuple of two dictionaries,

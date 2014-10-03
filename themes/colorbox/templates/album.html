@@ -10,15 +10,15 @@
 
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ SIGAL_THEME_URL }}/css/style.min.css">
+    <link rel="stylesheet" href="{{ SIGLICAN_THEME_URL }}/css/style.min.css">
 {% endblock %}
 
 {% block content %}
       <div id="main" role="main" class="twelve columns offset-by-four">
         <header>
-          {% if SIGAL_ALBUM.breadcrumb %}
+          {% if SIGLICAN_ALBUM.breadcrumb %}
           <h2>
-            {% for url, title in SIGAL_ALBUM.breadcrumb %}
+            {% for url, title in SIGLICAN_ALBUM.breadcrumb %}
             <a href="{{ url }}">{{ title }}</a>{% if not loop.last %} » {% endif %}
             {% endfor -%}
           </h2>
@@ -28,12 +28,12 @@
 
         {% set numbers = ["zero", "one", "two", "three", "four", "five", "six",
         "seven", "eight", "nine", "ten", "eleven", "twelve"] %}
-        {% set column_size = SIGAL_COLORBOX_COLUMN_SIZE %}
+        {% set column_size = SIGLICAN_COLORBOX_COLUMN_SIZE %}
         {% set nb_columns = (12 / column_size)|int %}
         {% set column_size_t = numbers[column_size] %}
 
-        {% if SIGAL_ALBUM.albums %}
-        {% for alb in SIGAL_ALBUM.albums %}
+        {% if SIGLICAN_ALBUM.albums %}
+        {% for alb in SIGLICAN_ALBUM.albums %}
           {% if loop.index % nb_columns == 1 %}
           <div id="albums" class="row">
           {% endif%}
@@ -51,7 +51,7 @@
         {% endfor %}
         {% endif %}
 
-        {% if SIGAL_ALBUM.medias %}
+        {% if SIGLICAN_ALBUM.medias %}
           {% macro img_description(media) -%}
             {% if media.big %} data-big="{{ media.big }}"{% endif %}
             {% if media.exif %}
@@ -61,7 +61,7 @@
             {% endif %}
           {%- endmacro %}
         <div id="gallery" class="row">
-          {% for media in SIGAL_ALBUM.medias %}
+          {% for media in SIGLICAN_ALBUM.medias %}
             {% if media.type == "image" %}
             <div class="{{ column_size_t }} columns thumbnail
                         {% if loop.index % nb_columns == 1 %}alpha{% endif%}
@@ -94,25 +94,25 @@
         </div>
         {% endif %}
 
-        {% if SIGAL_ALBUM.zip %}
+        {% if SIGLICAN_ALBUM.zip %}
         <div id="additionnal-infos" class="row">
           <p><a href="{{ album.zip }}"
               title="Download a zip archive with all images">Download ZIP</a></p>
         </div>
         {% endif %}
 
-        {% if SIGAL_ALBUM.description %}
+        {% if SIGLICAN_ALBUM.description %}
         <div id="description" class="row">
-          {{ SIGAL_ALBUM.description }}
+          {{ SIGLICAN_ALBUM.description }}
         </div>
         {% endif %}
       </div>
     </div>
 
-    {% if SIGAL_ALBUM.medias %}
+    {% if SIGLICAN_ALBUM.medias %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ SIGAL_THEME_URL }}/js/jquery-1.10.2.min.js"%3E%3C/script%3E'))</script>
-    <script src="{{ SIGAL_THEME_URL }}/js/jquery.colorbox.min.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ SIGLICAN_THEME_URL }}/js/jquery-1.10.2.min.js"%3E%3C/script%3E'))</script>
+    <script src="{{ SIGLICAN_THEME_URL }}/js/jquery.colorbox.min.js"></script>
 
     <script>
       $(".gallery").colorbox({

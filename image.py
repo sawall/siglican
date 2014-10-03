@@ -68,13 +68,13 @@ def generate_image(source, outname, settings, options=None):
     img = PILImage.open(source)
     original_format = img.format
 
-    if settings['SIGAL_COPY_EXIF_DATA'] and settings['SIGAL_AUTOROTATE_IMAGES']:
+    if settings['SIGLICAN_COPY_EXIF_DATA'] and settings['SIGLICAN_AUTOROTATE_IMAGES']:
         logger.warning("The 'autorotate_images' and 'copy_exif_data' settings "
                        "are not compatible because Sigal can't save the "
                        "modified Orientation tag.")
 
     # Preserve EXIF data
-    if settings['SIGAL_COPY_EXIF_DATA'] and _has_exif_tags(img):
+    if settings['SIGLICAN_COPY_EXIF_DATA'] and _has_exif_tags(img):
         if options is not None:
             options = deepcopy(options)
         else:
@@ -82,23 +82,23 @@ def generate_image(source, outname, settings, options=None):
         options['exif'] = img.info['exif']
 
     # Rotate the img, and catch IOError when PIL fails to read EXIF
-    if settings['SIGAL_AUTOROTATE_IMAGES']:
+    if settings['SIGLICAN_AUTOROTATE_IMAGES']:
         try:
             img = Transpose().process(img)
         except (IOError, IndexError):
             pass
 
     # Resize the image
-    if settings['SIGAL_IMG_PROCESSOR']:
+    if settings['SIGLICAN_IMG_PROCESSOR']:
         try:
-            logger.debug('Processor: %s', settings['SIGAL_IMG_PROCESSOR'])
+            logger.debug('Processor: %s', settings['SIGLICAN_IMG_PROCESSOR'])
             processor_cls = getattr(pilkit.processors,
-                                    settings['SIGAL_IMG_PROCESSOR'])
+                                    settings['SIGLICAN_IMG_PROCESSOR'])
         except AttributeError:
-            logger.error('Wrong processor name: %s', settings['SIGAL_IMG_PROCESSOR'])
+            logger.error('Wrong processor name: %s', settings['SIGLICAN_IMG_PROCESSOR'])
             sys.exit()
 
-        processor = processor_cls(*settings['SIGAL_IMG_SIZE'], upscale=False)
+        processor = processor_cls(*settings['SIGLICAN_IMG_SIZE'], upscale=False)
         img = processor.process(img)
     
     # TODO ** delete (maintained from Sigal for reference)
@@ -138,7 +138,7 @@ def process_image(filepath, outpath, settings):
     ext = os.path.splitext(filename)[1]
 
     if ext in ('.jpg', '.jpeg', '.JPG', '.JPEG'):
-        options = settings['SIGAL_JPG_OPTIONS']
+        options = settings['SIGLICAN_JPG_OPTIONS']
     elif ext == '.png':
         options = {'optimize': True}
     else:
@@ -150,10 +150,10 @@ def process_image(filepath, outpath, settings):
         logger.error('Failed to process image: %s', e)
         return
 
-    if settings['SIGAL_MAKE_THUMBS']:
+    if settings['SIGLICAN_MAKE_THUMBS']:
         thumb_name = os.path.join(outpath, get_thumb(settings, filename))
-        generate_thumbnail(outname, thumb_name, settings['SIGAL_THUMB_SIZE'],
-                           fit=settings['SIGAL_THUMB_FIT'], options=options)
+        generate_thumbnail(outname, thumb_name, settings['SIGLICAN_THUMB_SIZE'],
+                           fit=settings['SIGLICAN_THUMB_FIT'], options=options)
 
 
 def _get_exif_data(filename):
@@ -197,6 +197,6 @@ def get_thumb(settings, filename):
 
     if ext.lower() in Video.extensions:
         ext = '.jpg'
-    return os.path.join(path, settings['SIGAL_THUMB_DIR'], settings['SIGAL_THUMB_PREFIX'] +
-                name + settings['SIGAL_THUMB_SUFFIX'] + ext)
+    return os.path.join(path, settings['SIGLICAN_THUMB_DIR'], settings['SIGLICAN_THUMB_PREFIX'] +
+                name + settings['SIGLICAN_THUMB_SUFFIX'] + ext)
 

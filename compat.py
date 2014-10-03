@@ -20,8 +20,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-## ** TODO: use pelican's compatibility features in utils.py (which uses
-##          Django calls)
+## ** TODO: consider switching to use pelican's compat features in utils.py
+##          (which uses Django calls)
 
 import locale
 import sys
