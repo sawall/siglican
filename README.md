@@ -19,8 +19,8 @@ Colorbox/Galleria static site generator.
           /album1
           /album2
           /...
-       /theme```
-
+       /theme
+    ```
 3. Create album and image metadata, as desired.
 5. Create theme directory inside of 'siglican'. Use the colorbox or galleria
    theme as a starting point. Make sure that your Pelican theme's base.html
