@@ -10,7 +10,13 @@ Colorbox/Galleria static site generator.
 2. Create a 'siglican' directory in your base directory, at the same level as
    'content'. Drag 'colorbox' or 'galleria' from the 'themes' directory into
    this folder. Also create an 'images' subdirectory under 'siglican'.
-   ```
+3. Create album and image metadata, as desired.
+4. Create theme directory inside of 'siglican'. Use the colorbox or galleria
+   theme as a starting point. Make sure that your Pelican theme's base.html
+   template has a 'head' block defined before </head>.
+
+Example directory tree:
+```
    /site
      /content/*
      /plugins/siglican/*.py
@@ -22,11 +28,7 @@ Colorbox/Galleria static site generator.
        /[colorbox|galleria]
          /static/*
          /templates/album.html
-   ```
-3. Create album and image metadata, as desired.
-5. Create theme directory inside of 'siglican'. Use the colorbox or galleria
-   theme as a starting point. Make sure that your Pelican theme's base.html
-   template has a 'head' block defined before </head>.
+```
 
 ## To Do
 1. Update galleria theme to work.
