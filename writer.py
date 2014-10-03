@@ -34,30 +34,23 @@ import os
 import sys
 
 from distutils.dir_util import copy_tree
-from jinja2 import Environment, FileSystemLoader, ChoiceLoader, PrefixLoader
+from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
 from .pkgmeta import __url__ as sigal_link
 from .utils import url_from_path
 
 class Writer(object):
-    """Generate html pages for each directory of images."""
-    
+    """Generates html pages for albums and copies static theme files to output."""
+
     def __init__(self, settings, theme, index_title=''):
         self.settings = settings
         self.theme = theme
-        self.output_dir = settings['SIGAL_DESTINATION']
         self.index_title = index_title
+        self.output_dir = settings['SIGAL_DESTINATION']
         self.logger = logging.getLogger(__name__)
         
-        # check for a custom theme in ./sigal/themes, if not found, look for a
-        # default in the sigal_theme/themes plugin directory
-        
-        self.logger.info("siglican theme: %s", theme)
-        
-        # pelican theme path merged with siglican theme path 
-        theme_paths = [ os.path.join(self.theme, 'templates'),
-                        os.path.join(self.settings['THEME'], 'templates') ]
+        self.logger.debug("siglican theme: %s", theme)
         
         # setup jinja env
         env_options = {'trim_blocks': True}
@@ -67,21 +60,21 @@ class Writer(object):
         except ValueError:
             pass
         
-        ### note: removed the default loader since sigal default templates 
-        ###       were only used for google analytics, which have been
-        ###       removed from the siglican plugin port
+        # instantiate environment with pelican and siglican templates
+        theme_paths = [ os.path.join(self.theme, 'templates'),
+                        os.path.join(self.settings['THEME'], 'templates') ]        
         env = Environment(loader=FileSystemLoader(theme_paths),
                           **env_options)
                 
         try:
             self.template = env.get_template('album.html')
         except TemplateNotFound:
-            self.logger.error('siglican: template album.html not found')
+            self.logger.error('siglican: album.html not found in templates')
             sys.exit(1)
         
-        # Copy the theme files in the output dir
-        self.theme_path = os.path.join(settings['OUTPUT_PATH'], self.output_dir,
-                                       'static')
+        # copy the theme static files in the output dir
+        self.theme_path = os.path.join(settings['OUTPUT_PATH'],
+                                       self.output_dir,'static')
         copy_tree(os.path.join(self.theme, 'static'), self.theme_path)
         
     def generate_context(self, album):
