@@ -70,6 +70,7 @@ pelicanconf.py:
 ## Future
 1. Unit tests.
 2. Update colorbox/galleria example themes to deal better with nested albums.
+3. Streamline/refactor/merge modules.
    
 ##Credits
 * Around 2/3 of the core Python code is ported from [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
