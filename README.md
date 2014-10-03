@@ -30,7 +30,42 @@ Example directory tree:
          /templates/album.html
 ```
 
-##Pelican settings
+##Pelican Configuration Settings
+
+These are the default values of the settings that can be configured in 
+pelicanconf.py:
+
+* SIGLICAN_ALBUMS_SORT_REVERSE: False
+* SIGLICAN_AUTOROTATE_IMAGES: True
+* SIGLICAN_COLORBOX_COLUMN_SIZE: 4
+* SIGLICAN_COPY_EXIF_DATA: False
+* SIGLICAN_DESTINATION: 'gallery'
+* SIGLICAN_FILES_TO_COPY: ()
+* SIGLICAN_IGNORE_DIRECTORIES: ['.']
+* SIGLICAN_IGNORE_FILES: []
+* SIGLICAN_IMG_PROCESSOR: 'ResizeToFit'
+* SIGLICAN_IMG_SIZE: (640, 480)
+* SIGLICAN_INDEX_IN_URL: False
+* SIGLICAN_JPG_OPTIONS: {'quality': 85, 'optimize': True, 'progressive': True}
+* SIGLICAN_LINKS: ''
+* SIGLICAN_LOCALE: ''
+* SIGLICAN_MEDIAS_SORT_ATTR: 'filename'
+* SIGLICAN_MEDIAS_SORT_REVERSE: False
+* SIGLICAN_MAKE_THUMBS: True
+* SIGLICAN_ORIG_DIR: 'original'
+* SIGLICAN_ORIG_LINK: False
+* SIGLICAN_SOURCE: 'siglican'
+* SIGLICAN_THEME: 'colorbox'
+* SIGLICAN_THUMB_DIR: 'thumbs'
+* SIGLICAN_THUMB_FIT: True
+* SIGLICAN_THUMB_PREFIX: ''
+* SIGLICAN_THUMB_SIZE: (200, 150)
+* SIGLICAN_THUMB_SUFFIX: ''
+* SIGLICAN_VIDEO_SIZE: (480, 360)
+* SIGLICAN_WEBM_OPTIONS: ['-crf', '10', '-b:v', '1.6M','-qmin', '4', '-qmax', '63']
+* SIGLICAN_WRITE_HTML: True
+* SIGLICAN_ZIP_GALLERY: False
+* SIGLICAN_ZIP_MEDIA_FORMAT: 'resized'
 
 ## To Do
 1. Update galleria theme to work.
@@ -42,4 +77,4 @@ Example directory tree:
 ##Credits
 * Around 2/3 of the core Python code is ported from [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
 * Heavily leverages Pelican, Jinja2, Colorbox, and Galleria.
-* Pelican integration by Scott Boone (sawall@github).
+* Pelican generator plugin implementation and integration by Scott Boone (sawall@github).

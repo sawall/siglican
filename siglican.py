@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 # Default config from Sigal's settings module. These have been changed to 
 # upper case because Pelican does not recognize lower case configuration names.
+# note: if a default is changed, please also update README.md
 _DEFAULT_SIGLICAN_SETTINGS = {
     'SIGLICAN_ALBUMS_SORT_REVERSE': False,
     'SIGLICAN_AUTOROTATE_IMAGES': True,

@@ -359,7 +359,9 @@ class Album(object):
 
         breadcrumb.reverse()
         return breadcrumb
-
+    
+    # TODO: delete this and related settings; this is not a use case that
+    # a Pelican plugin should handle
     @property
     def zip(self):
         """Make a ZIP archive with all media files and return its path.
