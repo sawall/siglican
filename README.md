@@ -90,5 +90,5 @@ For more on creating Pelican generator plugins, see the [Pelican plugin document
 ##Credits
 * Around 2/3 of the core Python code is ported from
   [Sigal v0.8.0](http://sigal.saimon.org/) by Simon Conseil.
-* Heavily leverages Pelican, Jinja2, Colorbox, and Galleria.
+* Heavily leverages Pelican, PIL, Jinja2, Colorbox, and Galleria.
 * Pelican generator plugin implementation and integration by Scott Boone (sawall@github).

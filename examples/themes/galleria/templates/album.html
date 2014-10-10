@@ -1,39 +1,26 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+{% extends "base.html" %}
 
-    <title>{{ album.title|striptags }}</title>
-    <meta name="description" content="">
-    <meta name="author" content="{{ author }}">
-    <meta name="viewport" content="width=device-width">
+{#
+    A head block must be defined in the Pelican theme's base.html prior to
+    closing the HTML head tag so that the siglican stylesheets and javascript
+    can be added. simply adding:
+        {% block head %}{% endblock %} 
+    just before the head closer is sufficient.
+#}
 
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Molengo">
-    <link rel="stylesheet" href="{{ theme.url }}/css/galleria.classic.css">
-    <link rel="stylesheet" href="{{ theme.url }}/css/style.min.css">
-    <!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ SIGLICAN_THEME_URL }}/css/style.min.css">
+{% endblock %}
+
+{% block content %}
     <div class="container">
       <header>
-        <h1><a href="{{ album.index_url }}">{{ index_title }}</a></h1>
+        <h1><a href="{{ SIGLICAN_ALBUM.index_url }}">{{ index_title }}</a></h1>
 
-        {% if settings.links %}
-        <nav id="menu">
-          <ul>
-            {% for title, link in settings.links %}
-            <li><a href="{{ link }}">{{ title }}</a></li>
-            {% endfor %}
-          </ul>
-        </nav>
-        {% endif %}
-
-        {% if album.breadcrumb %}
+        {% if SIGLICAN_ALBUM.breadcrumb %}
         <h2>
-          {%- for url, title in album.breadcrumb -%}
+          {%- for url, title in SIGLICAN_ALBUM.breadcrumb -%}
           <a href="{{ url }}">{{ title }}</a>
           {%- if not loop.last %} » {% endif -%}
           {% endfor -%}
@@ -43,11 +30,11 @@
       </header>
 
       <div id="main" role="main">
-        {% if album.albums %}
+        {% if SIGLICAN_ALBUM.albums %}
         <div id="albums">
           <!-- <h1>Albums</h1> -->
           <ul>
-            {% for alb in album.albums %}
+            {% for alb in SIGLICAN_ALBUM.albums %}
             <li><a href="{{ alb.url }}">
               <img src="{{ alb.thumbnail }}" class="album_thumb" alt="{{ alb.name }}" title="{{ alb.name }}" /></a>
               <span class="album_title">{{ alb.title }}</span>
@@ -57,7 +44,7 @@
         </div>
         {% endif %}
 
-        {% if album.medias %}
+        {% if SIGLICAN_ALBUM.medias %}
           {% macro img_description(media) -%}
             {%- if media.big %}<a href='{{ media.big }}'>Full size</a>{% endif %}
             {% if media.description %}<br>{{ media.description }}{% endif %}
@@ -74,7 +61,7 @@
             {% endif %}
           {%- endmacro %}
         <div id="gallery">
-          {% for media in album.medias %}
+          {% for media in SIGLICAN_ALBUM.medias %}
             {% if media.type == "image" %}
               <a href="{{ media.filename }}">
                 <img src="{{ media.thumbnail }}" alt="{{ media.filename }}"
@@ -96,7 +83,7 @@
         </div>
         {% endif %}
 
-        {% if album.zip %}
+        {% if SIGLICAN_ALBUM.zip %}
         <div id="additionnal-infos" class="row">
           <p>
             <a href="{{ album.zip }}"
@@ -105,9 +92,9 @@
         </div>
         {% endif %}
 
-        {% if album.description %}
+        {% if SIGLICAN_ALBUM.description %}
         <div id="description">
-          {{ album.description }}
+          {{ SIGLICAN_ALBUM.description }}
         </div>
         {% endif %}
       </div>
@@ -118,12 +105,12 @@
       </footer>
     </div>
 
-    {% if album.medias %}
+    {% if SIGLICAN_ALBUM.medias %}
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ theme.url }}/js/jquery-1.11.1.min.js"%3E%3C/script%3E'))</script>
-    <script src="{{ theme.url }}/js/galleria-1.3.5.min.js"></script>
-    <script src="{{ theme.url }}/js/galleria.classic.min.js"></script>
-    <script src="{{ theme.url }}/js/galleria.history.min.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ SIGLICAN_THEME_URL }}/js/jquery-1.11.1.min.js"%3E%3C/script%3E'))</script>
+    <script src="{{ SIGLICAN_THEME_URL }}/js/galleria-1.3.5.min.js"></script>
+    <script src="{{ SIGLICAN_THEME_URL }}/js/galleria.classic.min.js"></script>
+    <script src="{{ SIGLICAN_THEME_URL }}/js/galleria.history.min.js"></script>
     <script>
     Galleria.configure({
         imageCrop: false,
@@ -140,6 +127,4 @@
 
     </script>
     {% endif %}
-    {% include 'analytics.html' %}
-  </body>
-</html>
+{% endblock %}
