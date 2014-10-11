@@ -22,8 +22,9 @@ Colorbox/Galleria static site generator.
    That will give your siglican theme a way to inject gallery-specific css and
    javascript into your gallery pages. 
 8. Create an 'images' folder under 'siglican'. Add album folders along with
-   images and metadata. See *examples/images* or the 
-   [Sigal documentation](http://sigal.readthedocs.org/en/latest/) for examples.
+   images and metadata. See *examples/images* for simple examples or the 
+   [Sigal documentation](http://sigal.readthedocs.org/en/latest/) for more
+   details.
 
 ###Example directory excerpt:
 ```
