@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from __future__ import print_function
+
 import os
 import sys
 import locale
@@ -210,17 +212,23 @@ class SigalGalleryGenerator(Generator):
         # github8 ** re-integrate multiprocessing logic from Sigal
         
         # generate thumbnails, process images, and move them to the destination
+        if logger.getEffectiveLevel() > logging.INFO:
+            print('siglican is processing media: ', end='')
+            sys.stdout.flush()
         albums = self.albums
         for a in albums:
-            logger.debug("siglican: creating directory for %s",a)
+            logger.info("siglican: processing album: %s",a)
             albums[a].create_output_directories()
             for media in albums[a].medias:
-                logger.debug("siglican: processing %r , source: %s, dst: %s",
-                             media,media.src_path,media.dst_path)
+                if logger.getEffectiveLevel() > logging.INFO:
+                    print('.', end='')
+                    sys.stdout.flush()
                 if os.path.isfile(media.dst_path):
                     logger.info("siglican: %s exists - skipping", media.filename)
                     self.stats[media.type + '_skipped'] += 1
                 else:
+                    logger.info("siglican: processing %r , source: %s, dst: %s",
+                             media,media.src_path,media.dst_path)
                     self.stats[media.type] += 1
                     logger.debug("MEDIA TYPE: %s",media.type)
                     # create/move resized images and thumbnails to output dirs:
@@ -230,6 +238,8 @@ class SigalGalleryGenerator(Generator):
                     elif media.type == 'video':
                         process_video(media.src_path,os.path.dirname(
                                       media.dst_path),self.settings)
+        if logger.getEffectiveLevel() > logging.INFO:
+            print('')
         
         # generate the index.html files for the albums
         if self.settings['SIGLICAN_WRITE_HTML']:  # defaults to True
