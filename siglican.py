@@ -96,7 +96,7 @@ class SigalGalleryGenerator(Generator):
         # add default sigal settings to generator settings:
         for k in _DEFAULT_SIGLICAN_SETTINGS.keys()[:]:
             self.settings[k] = self.settings.get(k, _DEFAULT_SIGLICAN_SETTINGS[k])
-            logger.debug("sigal.pelican: setting %s: %s",k,self.settings[k])
+            #logger.debug("sigal.pelican: setting %s: %s",k,self.settings[k])
         self._clean_settings()
         # this is where we could create a signal if we wanted to, e.g.:
         # signals.gallery_generator_init.send(self)
