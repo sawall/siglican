@@ -57,7 +57,7 @@ _DEFAULT_SIGLICAN_SETTINGS = {
     'SIGLICAN_LOCALE': '',
     'SIGLICAN_MEDIAS_SORT_ATTR': 'filename',
     'SIGLICAN_MEDIAS_SORT_REVERSE': False,
-    'SIGLICAN_MAKE_THUMBS': True,
+#    'SIGLICAN_MAKE_THUMBS': True,
     'SIGLICAN_ORIG_DIR': 'original',
     'SIGLICAN_ORIG_LINK': False,
 #    'PLUGINS': [],
@@ -167,7 +167,7 @@ class SigalGalleryGenerator(Generator):
                 logger.debug('siglican: Files before filtering: %r', files)
                 files = [os.path.split(f)[1] for f in files_path]
                 logger.debug('siglican: Files after filtering: %r', files)
-
+            
             # Remove sub-directories that have been ignored in a previous
             # iteration (as topdown=False, sub-directories are processed before
             # their parent
@@ -175,25 +175,24 @@ class SigalGalleryGenerator(Generator):
                 path = os.path.join(relpath, d) if relpath != '.' else d
                 if path not in self.albums.keys():
                     dirs.remove(d)        
-            
             album = Album(relpath, self.settings, dirs, files, self)
-            
+
             if not album.medias and not album.albums:
                 logger.info('siglican: Skip empty album: %r', album)
             else:
                 self.albums[relpath] = album
         # done generating context (self.albums) now
         logger.debug('siglican: albums:\n%r', self.albums.values())
-        
+
         # update the jinja context so that templates can access it:
         #self._update_context(('albums', ))   # unnecessary? **
         self.context['ALBUMS'] = self.albums  # ** change to SIGLICAN_ALBUMS?
-        
+
         # update the jinja context with the default sigal settings:
         for k,v in _DEFAULT_SIGLICAN_SETTINGS.iteritems():
             if not k in self.context:
                 self.context[k] = v
-        
+
     def generate_output(self, writer):
         """ Creates gallery destination directories, thumbnails, resized
             images, and moves everything into the destination."""

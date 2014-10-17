@@ -38,8 +38,6 @@ from PIL import Image as PILImage
 from .compat import strxfrm, UnicodeMixin, url_quote
 from .utils import read_markdown, url_from_path
 from .image import process_image, get_exif_tags
-from .image import generate_thumbnail as generate_img_thumb
-from .video import generate_thumbnail as generate_vid_thumb
 
 class Media(UnicodeMixin):
     """Base Class for media files.
@@ -86,22 +84,7 @@ class Media(UnicodeMixin):
     @property
     def thumbnail(self):
         """Path to the thumbnail image (relative to the album directory)."""
-
-        if not os.path.isfile(self.thumb_path):
-            # if thumbnail is missing (if settings['make_thumbs'] is False)
-            if self.type == 'image':
-                generator = generate_img_thumb
-            elif self.type == 'video':
-                generator = generate_vid_thumb
-
-            self.logger.debug('siglican: Generating thumbnail for %r', self)
-            try:
-                generator(self.src_path, self.thumb_path,
-                          self.settings['SIGLICAN_THUMB_SIZE'],
-                          fit=self.settings['SIGLICAN_THUMB_FIT'])
-            except Exception as e:
-                self.logger.error('siglican: Failed to generate thumbnail: %s', e)
-                return
+        # cleanup: make this deal better with SIGLICAN_MAKE_THUMBS: False
         return url_from_path(self.thumb_name)
 
     def _get_metadata(self):
