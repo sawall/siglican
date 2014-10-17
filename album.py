@@ -33,9 +33,13 @@ import os
 import logging
 
 from collections import defaultdict
+from PIL import Image as PILImage
 
 from .compat import strxfrm, UnicodeMixin, url_quote
 from .utils import read_markdown, url_from_path
+from .image import process_image, get_exif_tags
+from .image import generate_thumbnail as generate_img_thumb
+from .video import generate_thumbnail as generate_vid_thumb
 
 class Media(UnicodeMixin):
     """Base Class for media files.
@@ -86,9 +90,9 @@ class Media(UnicodeMixin):
         if not os.path.isfile(self.thumb_path):
             # if thumbnail is missing (if settings['make_thumbs'] is False)
             if self.type == 'image':
-                generator = image.generate_thumbnail
+                generator = generate_img_thumb
             elif self.type == 'video':
-                generator = video.generate_thumbnail
+                generator = generate_vid_thumb
 
             self.logger.debug('siglican: Generating thumbnail for %r', self)
             try:
@@ -410,81 +414,3 @@ def get_thumb(settings, filename):
         ext = '.jpg'
     return os.path.join(path, settings['SIGLICAN_THUMB_DIR'], settings['SIGLICAN_THUMB_PREFIX'] +
                 name + settings['SIGLICAN_THUMB_SUFFIX'] + ext)
-
-def get_exif_tags(source):
-    """Read EXIF tags from file @source and return a tuple of two dictionaries,
-    the first one containing the raw EXIF data, the second one a simplified
-    version with common tags.
-    """
-
-    logger = logging.getLogger(__name__)
-
-    if os.path.splitext(source)[1].lower() not in ('.jpg', '.jpeg'):
-        return (None, None)
-
-    try:
-        data = _get_exif_data(source)
-    except (IOError, IndexError, TypeError, AttributeError):
-        logger.warning(u'Could not read EXIF data from %s', source)
-        return (None, None)
-
-    simple = {}
-
-    # Provide more accessible tags in the 'simple' key
-    if 'FNumber' in data:
-        fnumber = data['FNumber']
-        simple['fstop'] = float(fnumber[0]) / fnumber[1]
-
-    if 'FocalLength' in data:
-        focal = data['FocalLength']
-        simple['focal'] = round(float(focal[0]) / focal[1])
-
-    if 'ExposureTime' in data:
-        if isinstance(data['ExposureTime'], tuple):
-            simple['exposure'] = '{0}/{1}'.format(*data['ExposureTime'])
-        elif isinstance(data['ExposureTime'], int):
-            simple['exposure'] = str(data['ExposureTime'])
-        else:
-            logger.warning('Unknown format for ExposureTime: %r (%s)',
-                           data['ExposureTime'], source)
-
-    if 'ISOSpeedRatings' in data:
-        simple['iso'] = data['ISOSpeedRatings']
-
-    if 'DateTimeOriginal' in data:
-        try:
-            # Remove null bytes at the end if necessary
-            date = data['DateTimeOriginal'].rsplit('\x00')[0]
-            simple['dateobj'] = datetime.strptime(date, '%Y:%m:%d %H:%M:%S')
-            dt = simple['dateobj'].strftime('%A, %d. %B %Y')
-
-            if compat.PY2:
-                simple['datetime'] = dt.decode('utf8')
-            else:
-                simple['datetime'] = dt
-        except (ValueError, TypeError) as e:
-            logger.warning(u'Could not parse DateTimeOriginal of %s: %s',
-                           source, e)
-
-    if 'GPSInfo' in data:
-        info = data['GPSInfo']
-        lat_info = info.get('GPSLatitude')
-        lon_info = info.get('GPSLongitude')
-        lat_ref_info = info.get('GPSLatitudeRef')
-        lon_ref_info = info.get('GPSLongitudeRef')
-
-        if lat_info and lon_info and lat_ref_info and lon_ref_info:
-            try:
-                lat = dms_to_degrees(lat_info)
-                lon = dms_to_degrees(lon_info)
-            except (ZeroDivisionError, ValueError):
-                logger.warning('Failed to read GPS info for %s', source)
-                lat = lon = None
-
-            if lat and lon:
-                simple['gps'] = {
-                    'lat': - lat if lat_ref_info != 'N' else lat,
-                    'lon': - lon if lon_ref_info != 'E' else lon,
-                }
-
-    return (data, simple)

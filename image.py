@@ -48,7 +48,6 @@ from pilkit.processors import Transpose
 from pilkit.utils import save_image
 
 from . import compat #, signals
-from .album import Video
 
 def _has_exif_tags(img):
     return hasattr(img, 'info') and 'exif' in img.info
@@ -177,6 +176,84 @@ def dms_to_degrees(v):
     s = float(v[2][0]) / float(v[2][1])
     return d + (m / 60.0) + (s / 3600.0)
 
+def get_exif_tags(source):
+    """Read EXIF tags from file @source and return a tuple of two dictionaries,
+    the first one containing the raw EXIF data, the second one a simplified
+    version with common tags.
+    """
+
+    logger = logging.getLogger(__name__)
+
+    if os.path.splitext(source)[1].lower() not in ('.jpg', '.jpeg'):
+        return (None, None)
+
+    try:
+        data = _get_exif_data(source)
+    except (IOError, IndexError, TypeError, AttributeError):
+        logger.warning(u'Could not read EXIF data from %s', source)
+        return (None, None)
+
+    simple = {}
+
+    # Provide more accessible tags in the 'simple' key
+    if 'FNumber' in data:
+        fnumber = data['FNumber']
+        simple['fstop'] = float(fnumber[0]) / fnumber[1]
+
+    if 'FocalLength' in data:
+        focal = data['FocalLength']
+        simple['focal'] = round(float(focal[0]) / focal[1])
+
+    if 'ExposureTime' in data:
+        if isinstance(data['ExposureTime'], tuple):
+            simple['exposure'] = '{0}/{1}'.format(*data['ExposureTime'])
+        elif isinstance(data['ExposureTime'], int):
+            simple['exposure'] = str(data['ExposureTime'])
+        else:
+            logger.warning('Unknown format for ExposureTime: %r (%s)',
+                           data['ExposureTime'], source)
+
+    if 'ISOSpeedRatings' in data:
+        simple['iso'] = data['ISOSpeedRatings']
+
+    if 'DateTimeOriginal' in data:
+        try:
+            # Remove null bytes at the end if necessary
+            date = data['DateTimeOriginal'].rsplit('\x00')[0]
+            simple['dateobj'] = datetime.strptime(date, '%Y:%m:%d %H:%M:%S')
+            dt = simple['dateobj'].strftime('%A, %d. %B %Y')
+
+            if compat.PY2:
+                simple['datetime'] = dt.decode('utf8')
+            else:
+                simple['datetime'] = dt
+        except (ValueError, TypeError) as e:
+            logger.warning(u'Could not parse DateTimeOriginal of %s: %s',
+                           source, e)
+
+    if 'GPSInfo' in data:
+        info = data['GPSInfo']
+        lat_info = info.get('GPSLatitude')
+        lon_info = info.get('GPSLongitude')
+        lat_ref_info = info.get('GPSLatitudeRef')
+        lon_ref_info = info.get('GPSLongitudeRef')
+
+        if lat_info and lon_info and lat_ref_info and lon_ref_info:
+            try:
+                lat = dms_to_degrees(lat_info)
+                lon = dms_to_degrees(lon_info)
+            except (ZeroDivisionError, ValueError):
+                logger.warning('Failed to read GPS info for %s', source)
+                lat = lon = None
+
+            if lat and lon:
+                simple['gps'] = {
+                    'lat': - lat if lat_ref_info != 'N' else lat,
+                    'lon': - lon if lon_ref_info != 'E' else lon,
+                }
+
+    return (data, simple)
+
 def get_thumb(settings, filename):
     """Return the path to the thumb.
 
@@ -195,7 +272,8 @@ def get_thumb(settings, filename):
     path, filen = os.path.split(filename)
     name, ext = os.path.splitext(filen)
 
-    if ext.lower() in Video.extensions:
+    # TODO: replace this list with Video.extensions github #16
+    if ext.lower() in ('.mov', '.avi', '.mp4', '.webm', '.ogv'):
         ext = '.jpg'
     return os.path.join(path, settings['SIGLICAN_THUMB_DIR'], settings['SIGLICAN_THUMB_PREFIX'] +
                 name + settings['SIGLICAN_THUMB_SUFFIX'] + ext)

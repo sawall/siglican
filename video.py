@@ -30,7 +30,6 @@ import shutil
 from os.path import splitext
 
 from . import image
-from .album import Video
 from .utils import call_subprocess
 
 # TODO: merge with image.py
@@ -170,7 +169,8 @@ def get_thumb(settings, filename):
     path, filen = os.path.split(filename)
     name, ext = os.path.splitext(filen)
 
-    if ext.lower() in Video.extensions:
+    # TODO: replace this list with Video.extensions github #16
+    if ext.lower() in ('.mov', '.avi', '.mp4', '.webm', '.ogv'):
         ext = '.jpg'
     return os.path.join(path, settings['thumb_dir'], settings['thumb_prefix'] +
                 name + settings['thumb_suffix'] + ext)
