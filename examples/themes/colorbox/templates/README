@@ -1,0 +1,3 @@
+To make this play nicely with limited modification, move siglican_gallery.html
+to your Pelican template. This will provide an entry point to colorbox which is
+driven by album.html here. 

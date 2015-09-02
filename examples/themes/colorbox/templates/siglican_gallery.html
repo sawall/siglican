@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>albums</h2>
+<hr>
+<div class="row">
+{% for aname,album in ROOT_ALBUMS.iteritems() %}
+  {% if loop.last %}
+    <div class="four columns end" style="text-align:right;">
+  {% else %}
+    <div class="four columns" style="text-align:right;">
+  {% endif %}
+<a href="{{ SITEURL }}/{{ SIGLICAN_DESTINATION }}/{{ album.url }}"><img src="{{ SITEURL }}/{{ SIGLICAN_DESTINATION }}/{{ album.thu
+mbnail }}"><br>{{ aname }}</a><p>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}
