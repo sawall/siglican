@@ -188,6 +188,12 @@ class SigalGalleryGenerator(Generator):
         #self._update_context(('albums', ))   # unnecessary? **
         self.context['ALBUMS'] = self.albums  # ** change to SIGLICAN_ALBUMS?
 
+        root_albums = {}
+        for k,v in self.albums.items():
+            if os.sep not in v.path:
+                root_albums[k] = v
+        self.context['ROOT_ALBUMS'] = root_albums
+
         # update the jinja context with the default sigal settings:
         for k,v in _DEFAULT_SIGLICAN_SETTINGS.items():
             if not k in self.context:
